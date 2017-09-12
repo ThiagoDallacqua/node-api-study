@@ -1,0 +1,26 @@
+{
+  "name": "payfast",
+  "version": "1.0.0",
+  "description": "API Node para pagamentos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "API",
+    "Node",
+    "Pagamentos"
+  ],
+  "author": "thiago",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "consign": "^0.1.6",
+    "express": "^4.15.4",
+    "express-validator": "^4.1.1",
+    "mysql": "^2.14.1",
+    "restify": "^5.2.0",
+    "restify-clients": "^1.5.0",
+    "soap": "^0.21.0"
+  }
+}
