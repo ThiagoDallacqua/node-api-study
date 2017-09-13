@@ -4,7 +4,7 @@ This API simulates a payment app which receives an payment and process, store it
 
 # Usage
 
-To create a payment you must send a POST requestto the address `https://node-api-study.herokuapp.com/pagamentos/pagamento` as follows:
+To create a payment you must send a POST request to the address `https://node-api-study.herokuapp.com/pagamentos/pagamento` as follows:
 
 Header: Content-Type: application/json
 
