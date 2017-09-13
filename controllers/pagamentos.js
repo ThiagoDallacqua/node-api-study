@@ -15,32 +15,50 @@ module.exports = function(app) {
     console.log(`consultando pagamento ${id}`);
     logger.info(`consultando pagamento ${id}`);
 
-    memcachedClient.get(`pagamento-${id}`, function(err, retorno) { //consulta na cache
-      if (err || !retorno) {
-        console.log('MISS - chave não encontrada');
-        logger.warn('MISS - chave não encontrada em cache');
+    if (!process.env.NODE_ENV) {
+      memcachedClient.get(`pagamento-${id}`, function(err, retorno) { //consulta na cache
+        if (err || !retorno) {
+          console.log('MISS - chave não encontrada');
+          logger.warn('MISS - chave não encontrada em cache');
 
-        var connection = app.infra.connectionFactory();
-        var pagamentoDAO = new app.infra.PagamentoDAO(connection);
+          var connection = app.infra.connectionFactory();
+          var pagamentoDAO = new app.infra.PagamentoDAO(connection);
 
-        pagamentoDAO.buscaPorId(id, function(err, result) {
-          if (err) {
-            res.status(500).send(err);
+          pagamentoDAO.buscaPorId(id, function(err, result) {
+            if (err) {
+              res.status(500).send(err);
+              return
+            }
+
+            console.log(`pagamento encontrado: ${JSON.stringify(result)}`);
+            logger.info(`pagamento consultado no banco de dados: ${JSON.stringify(result)}`);
+
+            res.json(result);
             return
-          }
+          })
+        }else {
+          console.log(`HIT - valor: ${JSON.stringify(retorno)}`);
 
-          console.log(`pagamento encontrado: ${JSON.stringify(result)}`);
-          logger.info(`pagamento consultado no banco de dados: ${JSON.stringify(result)}`);
-
-          res.json(result);
+          res.json(retorno);
           return
-        })
-      }else {
-        console.log(`HIT - valor: ${JSON.stringify(retorno)}`);
+        }
+      })
+    }
 
-        res.json(retorno);
+    pagamentoDAO.buscaPorId(id, function(err, result) {
+      if (err) {
+        logger.error(`Erro ao consultar no DB: ${err}`);
+        console.log(`Erro ao consultar no DB: ${err}`);
+
+        res.status(500).send(err);
         return
       }
+
+      console.log(`pagamento encontrado: ${JSON.stringify(result)}`);
+      logger.info(`pagamento consultado no banco de dados: ${JSON.stringify(result)}`);
+
+      res.json(result);
+      return
     })
   });
 
@@ -84,15 +102,14 @@ module.exports = function(app) {
         console.log('pagamento criado');
         logger.info(`pagamento criado: ${JSON.stringify(pagamento)}`);
 
-        var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
-
         if (!process.env.NODE_ENV) {
+          var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
           memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
             console.log(`nova chave adicionada ao cache: pagamento-${pagamento.id}`);
           });
-        } else {
+        } /*else {
           memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000);
-        }
+        }*/
 
         if (pagamento.forma_de_pagamento == 'cartao') {
           var cartao = req.body;
@@ -188,11 +205,13 @@ module.exports = function(app) {
       console.log('pagamento confirmado');
       logger.info(`pagamento confirmado: ${JSON.stringify(pagamento)}`)
 
-      var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
+      if (!process.env.NODE_ENV) {
+        var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
 
-      memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
-        console.log(`chave atualizada no cache: pagamento-${pagamento.id}`);
-      });
+        memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
+          console.log(`chave atualizada no cache: pagamento-${pagamento.id}`);
+        });
+      }
 
       res.send(pagamento);
     })
@@ -221,11 +240,13 @@ module.exports = function(app) {
 
       logger.info(`pagamento cancelado: ${JSON.stringify(pagamento)}`);
 
-      var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
+      if (!process.env.NODE_ENV) {
+        var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
 
-      memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
-        console.log(`chave atualizada no cache: pagamento-${pagamento.id}`);
-      });
+        memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
+          console.log(`chave atualizada no cache: pagamento-${pagamento.id}`);
+        });
+      }
 
       res.status(204).send(pagamento);
     })
