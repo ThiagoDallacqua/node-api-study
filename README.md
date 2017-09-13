@@ -4,13 +4,13 @@ This API simulates a payment app which receives an payment and process, store it
 
 # Usage
 
-To create a payment you must send a PUT requestto the address `https://node-api-study.herokuapp.com/pagamentos/pagamento` as follows:
+To create a payment you must send a POST requestto the address `https://node-api-study.herokuapp.com/pagamentos/pagamento` as follows:
 
 Header: Content-Type: application/json
 
-Body: The body is a JSON with two atributes `pagamento` and `cartao` where the `pagamento` must have 
+Body: The body is a JSON with two atributes `pagamento` and `cartao` where the `pagamento` must have
 
-`forma_de_pagamento`: with `"payfast"` or `"cartao"` 
+`forma_de_pagamento`: with `"payfast"` or `"cartao"`
 
 `valor`: with the amount of the payment
 
