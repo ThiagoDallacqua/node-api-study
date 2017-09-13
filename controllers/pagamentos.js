@@ -1,4 +1,7 @@
+var logger = require('../servicos/logger.js')
+
 module.exports = function(app) {
+
   app.get('/pagamentos', function(req, res) {
     console.log('Requisição de teste recebida');
 
@@ -10,10 +13,13 @@ module.exports = function(app) {
     var memcachedClient = app.servicos.MemcachedClient();
 
     console.log(`consultando pagamento ${id}`);
+    logger.info(`consultando pagamento ${id}`);
 
     memcachedClient.get(`pagamento-${id}`, function(err, retorno) { //consulta na cache
       if (err || !retorno) {
         console.log('MISS - chave não encontrada');
+        logger.warn('MISS - chave não encontrada em cache');
+
         var connection = app.infra.connectionFactory();
         var pagamentoDAO = new app.infra.PagamentoDAO(connection);
 
@@ -24,6 +30,8 @@ module.exports = function(app) {
           }
 
           console.log(`pagamento encontrado: ${JSON.stringify(result)}`);
+          logger.info(`pagamento consultado no banco de dados: ${JSON.stringify(result)}`);
+
           res.json(result);
           return
         })
@@ -48,6 +56,7 @@ module.exports = function(app) {
 
     if (erros) {
       console.log("Ocorreram erros de validação");
+      logger.error(`Ocorreram erros na validação com o cliente: ${erros}`);
 
       res.status(400).send(erros);
       return
@@ -56,6 +65,7 @@ module.exports = function(app) {
     var pagamento = req.body["pagamento"];
 
     console.log('processando requisição de um novo pagamento');
+    logger.info(`processando nova requisição de pagamento: ${JSON.stringify(pagamento)}`);
 
     pagamento.status = 'CRIADO';
     pagamento.data = new Date;
@@ -66,10 +76,13 @@ module.exports = function(app) {
     pagamentoDAO.salva(pagamento, function(err, result) {
       if (err) {
         console.log(`Erro ao persistir no DB: ${err}`);
+        logger.error(`Erro ao persistir no DB: ${err}`);
+
         res.status(500).send(err)
       }else{
         pagamento.id = result.insertId;
         console.log('pagamento criado');
+        logger.info(`pagamento criado: ${JSON.stringify(pagamento)}`);
 
         var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
 
@@ -84,10 +97,14 @@ module.exports = function(app) {
           clienteCartoes.autoriza(cartao, function(error, request, response, retorno) {
             if (error) {
               console.log(error);
+              logger.error(`erro ao processar pagamento com cartão: ${error}`)
+
               res.status(400).send(error);
               return;
             }
             console.log(retorno);
+
+            logger.info(`pagamento com cartão processado com sucesso: ${JSON.stringify(retorno)}`);
 
             res.location(`/pagamentos/pagamento/${pagamento.id}`);
 
@@ -158,11 +175,14 @@ module.exports = function(app) {
 
     pagamentoDAO.atualiza(pagamento, function(err, result) {
       if (err) {
+        logger.error(`Erro ao atualizar no DB: ${err}`);
+
         res.status(500).send(err);
         return
       }
 
       console.log('pagamento confirmado');
+      logger.info(`pagamento confirmado: ${JSON.stringify(pagamento)}`)
 
       var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
 
@@ -187,11 +207,15 @@ module.exports = function(app) {
 
     pagamentoDAO.atualiza(pagamento, function(err, result) {
       if (err) {
+        logger.error(`Erro ao atualizar no DB: ${err}`);
+
         res.status(500).send(err);
         return
       }
 
       console.log('pagamento cancelado');
+
+      logger.info(`pagamento cancelado: ${JSON.stringify(pagamento)}`);
 
       var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
 
