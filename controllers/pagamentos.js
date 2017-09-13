@@ -113,17 +113,17 @@ module.exports = function(app) {
               cartao: retorno,
               links: [
                 {
-                  href: `http://localhost:3000/pagamentos/pagamento/${pagamento.id}`,
+                  href: `https://node-api-study.herokuapp.com/pagamentos/pagamento/${pagamento.id}`,
                   rel: 'confirmar',
                   method: 'PUT'
                 },
                 {
-                  href: `http://localhost:3000/pagamentos/pagamento/${pagamento.id}`,
+                  href: `https://node-api-study.herokuapp.com/pagamentos/pagamento/${pagamento.id}`,
                   rel: 'consultar',
                   method: 'GET'
                 },
                 {
-                  href: `http://localhost:3000/pagamentos/pagamento/${pagamento.id}`,
+                  href: `https://node-api-study.herokuapp.com/pagamentos/pagamento/${pagamento.id}`,
                   rel: 'cancelar',
                   method: 'DELETE'
                 }
@@ -140,17 +140,17 @@ module.exports = function(app) {
             dados_do_pagamento: pagamento,
             links: [
               {
-                href: `http://localhost:3000/pagamentos/pagamento/${pagamento.id}`,
+                href: `https://node-api-study.herokuapp.com/pagamentos/pagamento/${pagamento.id}`,
                 rel: 'confirmar',
                 method: 'PUT'
               },
               {
-                href: `http://localhost:3000/pagamentos/pagamento/${pagamento.id}`,
+                href: `https://node-api-study.herokuapp.com/pagamentos/pagamento/${pagamento.id}`,
                 rel: 'consultar',
                 method: 'GET'
               },
               {
-                href: `http://localhost:3000/pagamentos/pagamento/${pagamento.id}`,
+                href: `https://node-api-study.herokuapp.com/pagamentos/pagamento/${pagamento.id}`,
                 rel: 'cancelar',
                 method: 'DELETE'
               }
