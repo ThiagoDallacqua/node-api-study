@@ -16,8 +16,8 @@ class PagamentoDAO {
       [pagamento.status, pagamento.id], callback)
   }
 
-  buscaPorId(pagamento, callback){
-    this._connection.query('select * from pagamentos where id = ?', pagamento.id, callback)
+  buscaPorId(id, callback){
+    this._connection.query('select * from pagamentos where id = ?', id, callback)
   }
 }
 
