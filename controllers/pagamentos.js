@@ -2,10 +2,8 @@ var logger = require('../servicos/logger.js')
 
 module.exports = function(app) {
 
-  app.get('/pagamentos', function(req, res) {
-    console.log('Requisição de teste recebida');
-
-    res.send('OK')
+  app.get('/', function(req, res) {
+    res.status(302).redirect('https://github.com/ThiagoDallacqua/node-api-study/blob/master/README.md');
   });
 
   app.get('/pagamentos/pagamento/:id', function(req, res) {
