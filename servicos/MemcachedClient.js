@@ -13,7 +13,7 @@ function createMemcachedClient() {
   }
 
   if (process.env.NODE_ENV == 'production') {
-    var client = new memcached(process.env.MEMCACHEDCLOUD_SERVERS, {
+    var client = memcached.Client.create(process.env.MEMCACHEDCLOUD_SERVERS, {
       username: process.env.MEMCACHEDCLOUD_USERNAME,
       password: process.env.MEMCACHEDCLOUD_PASSWORD,
       retries: 10, //número de tentativas de consultas no cluster
