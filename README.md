@@ -104,3 +104,54 @@ It will also contain links with the other possible operations, from there, which
     ]
 }
 ```
+# Aditional Features
+
+This API are integrated with the SOAP Web Service from Correios do Brasil, which can calculate a delivery time
+
+To know the delivery time you must send a POST to the address `https://node-api-study.herokuapp.com/correios/calculo-prazo` as follows:
+
+Header: Content-Type: application/json
+
+Body: The body is a JSON with a atribute `"cep"`
+
+```
+{
+	"cep": "77700000"
+}
+```
+
+For now you can use only valid brazilian ZIP codes as `"cep"`, here's a list of some that you can use:
+```
+77000000
+77700000
+65907230
+01505-010
+04105-070
+```
+
+This request will return a JSON similar to this:
+
+```
+{
+    "CalcPrazoResult": {
+        "Servicos": {
+            "cServico": [
+                {
+                    "Codigo": 40010,
+                    "PrazoEntrega": "3",
+                    "EntregaDomiciliar": "S",
+                    "EntregaSabado": "N",
+                    "Erro": "",
+                    "MsgErro": "",
+                    "obsFim": "",
+                    "DataMaxEntrega": "18/09/2017"
+                }
+            ]
+        }
+    }
+}
+```
+
+The `"PrazoEntrega"` is the estimated amount of days for the delivery
+
+The `"DataMaxEntrega"` is the maximum estimated day for the delivery

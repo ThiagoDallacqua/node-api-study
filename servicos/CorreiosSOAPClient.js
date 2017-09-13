@@ -6,10 +6,16 @@ class CorreiosSOAPClient {
   }
 
   calculaPrazo(args, callback){
+    var data = {
+      "nCdServico": "40010",
+    	"sCepOrigem": "77006100",
+      "sCepDestino": args
+    }
+
     soap.createClient(this._url, function(err, cliente) {
       console.log('Cliente SOAP criado');
 
-      cliente.CalcPrazo(args, callback)
+      cliente.CalcPrazo(data, callback)
     });
   }
 }
