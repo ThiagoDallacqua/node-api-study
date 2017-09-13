@@ -86,9 +86,13 @@ module.exports = function(app) {
 
         var memcachedClient = app.servicos.MemcachedClient(); //cacheia temporariamente o pagamento
 
-        memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
-          console.log(`nova chave adicionada ao cache: pagamento-${pagamento.id}`);
-        });
+        if (!process.env.NODE_ENV) {
+          memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000, function(err) {
+            console.log(`nova chave adicionada ao cache: pagamento-${pagamento.id}`);
+          });
+        } else {
+          memcachedClient.set(`pagamento-${pagamento.id}`, pagamento);
+        }
 
         if (pagamento.forma_de_pagamento == 'cartao') {
           var cartao = req.body;
