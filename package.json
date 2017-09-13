@@ -20,6 +20,7 @@
     "express": "^4.15.4",
     "express-validator": "^4.1.1",
     "memcached": "^2.2.2",
+    "memjs": "^1.0.0-rc.1",
     "morgan": "^1.8.2",
     "mysql": "^2.14.1",
     "restify": "^5.2.0",
