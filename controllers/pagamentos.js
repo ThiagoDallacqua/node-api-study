@@ -91,7 +91,7 @@ module.exports = function(app) {
             console.log(`nova chave adicionada ao cache: pagamento-${pagamento.id}`);
           });
         } else {
-          memcachedClient.set(`pagamento-${pagamento.id}`, pagamento);
+          memcachedClient.set(`pagamento-${pagamento.id}`, pagamento, 60000);
         }
 
         if (pagamento.forma_de_pagamento == 'cartao') {
