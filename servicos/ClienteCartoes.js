@@ -4,7 +4,7 @@ var clients = require('restify-clients');
 class ClienteCartoes {
   constructor() {
     this._cliente = clients.createJsonClient({
-      url: 'http://localhost:3001',
+      url: 'https://node-api-study-cardfast.herokuapp.com',
       version: '~1.0'
     });
   }
