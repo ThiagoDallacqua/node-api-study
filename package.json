@@ -4,7 +4,9 @@
   "description": "API Node para pagamentos",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm install",
+    "start": "node cluster"
   },
   "keywords": [
     "API",
@@ -25,5 +27,8 @@
     "restify-clients": "^1.5.0",
     "soap": "^0.21.0",
     "winston": "^2.3.1"
+  },
+  "engines": {
+    "node": "6.9.1"
   }
 }
