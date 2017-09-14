@@ -43,6 +43,9 @@ module.exports = function(app) {
       })
     }
 
+    var connection = app.infra.connectionFactory();
+    var pagamentoDAO = new app.infra.PagamentoDAO(connection);
+
     pagamentoDAO.buscaPorId(id, function(err, result) {
       if (err) {
         logger.error(`Erro ao consultar no DB: ${err}`);
